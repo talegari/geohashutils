@@ -20,4 +20,5 @@ vectorized over geohash vectors
 }
 \examples{
 gh_is_neighbor(c("tdrw1", "tdrw5"), c("tdrw2","tdrw3"))
+mapview::mapview(geohashTools::gh_to_sf(c(c("tdrw1", "tdrw5"), c("tdrw2","tdrw3"))))
 }

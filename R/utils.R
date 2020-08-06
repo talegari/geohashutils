@@ -216,6 +216,8 @@ gh_cover_ = function(x, precision = NULL){
 #' temp
 #' gu = geohashTools::gh_to_sf(gh_cover(temp, 4)[[1]])
 #' mapview::mapview(list(gu, temp))
+#' # comparse with 'geohashTools'
+#' mapview::mapview(geohashTools::gh_covering(temp, 4))
 #' @export
 #'
 gh_cover = function(sfs, precision = NULL){
@@ -271,6 +273,7 @@ gh_pad_ = function(gh, self = TRUE){
 #' @return (list of character vectors) of padding geohashes
 #' @examples
 #' gh_pad(c("tdr1w", "tdr1q"))
+#' mapview::mapview(geohashTools::gh_to_sf(gh_pad("tdr1w")[[1]]))
 #' @export
 #'
 gh_pad = function(ghs, self = TRUE){
@@ -292,6 +295,7 @@ gh_pad = function(ghs, self = TRUE){
 #' @return object of class 'bbox'
 #' @examples
 #' gh_envelope_bbox(c("tdr1w", "tdr1q"))
+#' mapview::mapview(gh_envelope_bbox(c("tdr1w", "tdr1q")))
 #' @export
 #'
 gh_envelope_bbox = function(ghs, crs = 4236){
@@ -376,6 +380,7 @@ gh_is_neighbor_ = function(gh_1, gh_2){
 #'   vectors
 #' @examples
 #' gh_is_neighbor(c("tdrw1", "tdrw5"), c("tdrw2","tdrw3"))
+#' mapview::mapview(geohashTools::gh_to_sf(c(c("tdrw1", "tdrw5"), c("tdrw2","tdrw3"))))
 #' @export
 #'
 gh_is_neighbor = function(gh_1, gh_2){

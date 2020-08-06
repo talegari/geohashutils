@@ -19,4 +19,5 @@ Pad geohashes with neighboring one-level smaller geohash
 }
 \examples{
 gh_pad(c("tdr1w", "tdr1q"))
+mapview::mapview(geohashTools::gh_to_sf(gh_pad("tdr1w")[[1]]))
 }

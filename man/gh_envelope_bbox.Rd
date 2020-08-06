@@ -20,4 +20,5 @@ as sf bbox object
 }
 \examples{
 gh_envelope_bbox(c("tdr1w", "tdr1q"))
+mapview::mapview(gh_envelope_bbox(c("tdr1w", "tdr1q")))
 }

@@ -23,4 +23,6 @@ temp = sf::st_read(fname)
 temp
 gu = geohashTools::gh_to_sf(gh_cover(temp, 4)[[1]])
 mapview::mapview(list(gu, temp))
+# comparse with 'geohashTools'
+mapview::mapview(geohashTools::gh_covering(temp, 4))
 }
