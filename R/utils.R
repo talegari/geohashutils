@@ -348,5 +348,105 @@ gh_bbox = function(ghs, crs = 4236){
   return(res)
 }
 
-# gh_neighborhood_graph
-# this is helpful in understanding neighborhood and its propertied canonically
+#' @name gh_is_neighbor_
+#' @title check neighborhood relationship btween a geohash pair
+#' @description check neighborhood relationship btween a geohash pair
+#' @param gh_1 first geohash
+#' @param gh_2 second geohash
+#' @return (flag)
+#'
+gh_is_neighbor_ = function(gh_1, gh_2){
+
+  gh_1_sf = geohashTools::gh_to_sf(gh_1)
+  gh_2_sf = geohashTools::gh_to_sf(gh_2)
+
+  touches  = sf::st_touches(gh_1_sf, gh_2_sf, sparse = FALSE)[1,1]
+  contains = sf::st_contains(gh_1_sf, gh_2_sf, sparse = FALSE)[1,1]
+
+  res = touches && !contains
+  return(res)
+}
+
+#' @name gh_is_neighbor
+#' @title check neighborhood relationship between geohash vectors
+#' @description vectorized over geohash vectors
+#' @param gh_1 first geohash
+#' @param gh_2 second geohash
+#' @return (logical vector) with length equal to longer of the two geohash
+#'   vectors
+#' @examples
+#' gh_is_neighbor(c("tdrw1", "tdrw5"), c("tdrw2","tdrw3"))
+#' @export
+#'
+gh_is_neighbor = function(gh_1, gh_2){
+
+  stopifnot(all(gh_is_valid(gh_1)))
+  stopifnot(all(gh_is_valid(gh_2)))
+
+  suppressMessages({
+    res = Vectorize(gh_is_neighbor_, USE.NAMES = FALSE)(gh_1, gh_2)
+  })
+
+  return(res)
+}
+
+#' @name gh_is_interior_
+#' @title check whether gh_2 is in the proper interior of gh_1
+#' @description check whether gh_2 is in the proper interior of gh_1
+#' @param gh_1 first geohash
+#' @param gh_2 second geohash
+#' @return (flag)
+#'
+gh_is_interior_ = function(gh_1, gh_2){
+
+  gh_1_sf = geohashTools::gh_to_sf(gh_1)
+  gh_2_sf = geohashTools::gh_to_sf(gh_2)
+
+  res = sf::st_contains_properly(gh_1_sf, gh_2_sf, sparse = FALSE)[1,1]
+  return(res)
+}
+
+#' @name gh_is_interior
+#' @title check whether gh_2 is in the proper interior of gh_1
+#' @description vectorized check whether gh_2 is in the proper interior of gh_1
+#' @param gh_1 first geohash vector
+#' @param gh_2 second geohash vector
+#' @return (logical vector) with length equal to longer of the two geohash
+#'   vectors
+#' @examples
+#' gh_is_interior("tdr1w", c("tdr1wd", "tdr1w1"))
+#' mapview::mapview(geohashTools::gh_to_sf(c("tdr1w", "tdr1wd", "tdr1w1")))
+#' @export
+#'
+gh_is_interior = function(gh_1, gh_2){
+
+  stopifnot(all(gh_is_valid(gh_1)))
+  stopifnot(all(gh_is_valid(gh_2)))
+
+  suppressMessages({
+    res = Vectorize(gh_is_interior_, USE.NAMES = FALSE)(gh_1, gh_2)
+  })
+  return(res)
+}
+
+#' @name gh_hull
+#' @title convex hull of geohashes
+#' @description Obtain sf POINT geometry of convex hull covering the nodes of a set of geohashes
+#' @param ghs (character vector) of geohashes
+#' @return Object of class "sfc_POINT"
+#' @examples
+#' temp = c("tdr1w", "tdr3qt", "tdr1qw")
+#' hull_sfc = gh_hull(temp)
+#' mapview::mapview(list(hull_sfc, geohashTools::gh_to_sf(temp)))
+#' @export
+#'
+gh_hull = function(ghs){
+
+  stopifnot(all(gh_is_valid(ghs)))
+
+  geom_layer = geohashTools::gh_to_sf(ghs)$geometry
+  points = sf::st_union(sf::st_cast(geom_layer, to = "MULTIPOINT"))
+  res = sf::st_convex_hull(points)
+
+  return(res)
+}
